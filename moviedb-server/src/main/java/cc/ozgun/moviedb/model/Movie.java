@@ -24,9 +24,11 @@ public class Movie {
     private Long id;
 
     @NotBlank
+    @Size(min = 1, max = 200)
     private String title;
 
     @NotBlank
+    @Size(min = 1, max = 30)
     private String shortTitle;
 
     @Min(1900)
@@ -35,6 +37,7 @@ public class Movie {
     private Integer productionYear;
 
     @NotBlank
+    @Size(min = 1, max = 200)
     private String director;
 
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)

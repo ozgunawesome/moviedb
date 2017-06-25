@@ -51,27 +51,35 @@ public class MovieRepositoryTest {
         repository.save(movie);
         Movie persistedMovie = repository.findOne(movie.getId());
         assertEquals(persistedMovie, movie);
-        repository.delete(movie);
     }
 
     @Test(expected = ValidationException.class)
     public void testAddInvalidYear() {
         movie.setProductionYear(null);
         repository.save(movie);
-        repository.delete(movie);
     }
 
     @Test(expected = ValidationException.class)
     public void testAddNullGenre() {
         movie.setGenres(null);
         repository.save(movie);
-        repository.delete(movie);
     }
 
     @Test(expected = ValidationException.class)
     public void testAddTooManyGenres() {
         movie.setGenres(new HashSet<>(Arrays.asList(Genre.CARTOON, Genre.COMEDY, Genre.CRIME, Genre.ACTION)));
         repository.save(movie);
-        repository.delete(movie);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void testAddNullDirector() {
+        movie.setDirector(null);
+        repository.save(movie);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void testAddTooLongShortTitle() {
+        movie.setShortTitle("123456789 123456789 123456789 1");
+        repository.save(movie);
     }
 }
