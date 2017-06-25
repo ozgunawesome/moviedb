@@ -1,5 +1,9 @@
 package cc.ozgun.moviedb.model;
 
+import cc.ozgun.moviedb.model.mapper.DurationDeserializer;
+import cc.ozgun.moviedb.model.mapper.DurationSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
 
@@ -45,6 +49,8 @@ public class Movie {
 
     @Min(0)
     @NotNull
+    @JsonSerialize(using = DurationSerializer.class)
+    @JsonDeserialize(using = DurationDeserializer.class)
     private Long duration;
 
     public Long getId() {
