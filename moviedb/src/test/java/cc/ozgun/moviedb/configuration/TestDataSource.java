@@ -19,7 +19,7 @@ public class TestDataSource {
     @Bean
     public DataSource dataSource() {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-        dataSource.setUrl("jdbc:h2:mem:movie_db_test");
+        dataSource.setUrl("jdbc:h2:mem:movie_db_test;DB_CLOSE_DELAY=-1");
         dataSource.setDriverClass(org.h2.Driver.class);
         return dataSource;
     }
