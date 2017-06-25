@@ -12,8 +12,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 @Entity
 @Validated
@@ -59,7 +62,7 @@ public class Movie {
     @Size(min = 1, max = 3)
     private Set<Genre> genres;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @NotNull
     private AgeRating ageRating;
 
@@ -151,5 +154,18 @@ public class Movie {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, shortTitle, productionYear, director, genres, ageRating, duration);
+    }
+
+    public Movie(String title, String shortTitle, Integer productionYear, String director, AgeRating ageRating, Long duration, Genre... genres) {
+        this.title = title;
+        this.shortTitle = shortTitle;
+        this.productionYear = productionYear;
+        this.director = director;
+        this.genres = new HashSet<>(asList(genres));
+        this.ageRating = ageRating;
+        this.duration = duration;
+    }
+
+    public Movie() {
     }
 }

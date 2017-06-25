@@ -32,15 +32,23 @@ public interface MovieRepository extends PagingAndSortingRepository<Movie, Long>
 
     Page<Movie> findByDurationLessThanEqual(@Param("max") Long duration, Pageable pageable);
 
-    Page<Movie> findByDurationBetween(@Param("min") Long duration, @Param("max") Long duration2, Pageable pageable);
+    Page<Movie> findByDurationBetween(@Param("min") Long lowerBound, @Param("max") Long upperBound, Pageable pageable);
 
     Page<Movie> findByGenresContaining(@Param("genre") Genre genre, Pageable pageable);
 
     Page<Movie> findByGenresNotContaining(@Param("genre") Genre genre, Pageable pageable);
 
+    @Query("select m from Movie m where m.productionYear >= ?1")
+    Page<Movie> findByProductionYearOnOrAfter(@Param("year") Integer productionYear, Pageable pageable);
+
+    @Query("select m from Movie m where m.productionYear <= ?1")
+    Page<Movie> findByProductionYearOnOrBefore(@Param("year") Integer productionYear, Pageable pageable);
+
+    Page<Movie> findByProductionYearBetween(@Param("year1") Integer lowerBound, @Param("year2") Integer upperBound, Pageable pageable);
+
     Page<Movie> findByAgeRating(@Param("ageRating") AgeRating ageRating, Pageable pageable);
 
-    @RestResource(path = "findByAgeRatingSuitableFor", rel = "findByAgeRatingSuitableFor")
+    @RestResource(path = "findSuitableForAgeGroup", rel = "findSuitableForAgeGroup")
     Page<Movie> findByAgeRatingGreaterThanEqual(@Param("ageRating") AgeRating ageRating, Pageable pageable);
 
     @Query(name = "findByRegex", countName = "findByRegexCount")
