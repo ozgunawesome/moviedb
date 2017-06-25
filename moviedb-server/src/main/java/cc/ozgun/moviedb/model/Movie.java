@@ -17,6 +17,19 @@ import java.util.Set;
 
 @Entity
 @Validated
+@SqlResultSetMappings({
+        @SqlResultSetMapping(name = "countMapping", columns = @ColumnResult(name = "numResults"))
+})
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "findByRegex",
+                resultClass = Movie.class,
+                query = "select * from Movie m where regexp_like(m.title, ?1) or regexp_like(m.short_title, ?1) or regexp_like(m.director, ?1)"),
+        @NamedNativeQuery(
+                name = "findByRegexCount",
+                resultSetMapping = "countMapping",
+                query = "select count(*) as numResults from Movie m where regexp_like(m.title, ?1) or regexp_like(m.short_title, ?1) or regexp_like(m.director, ?1)")
+})
 public class Movie {
 
     @Id
