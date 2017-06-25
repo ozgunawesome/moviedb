@@ -29,6 +29,7 @@ public class MovieRepositoryTest {
 
     @BeforeClass
     public static void startApplication() {
+        System.setProperty("spring.profiles.active", "test");
         context = SpringApplication.run(MoviedbApplication.class);
         repository = context.getBean(MovieRepository.class);
     }
@@ -57,17 +58,20 @@ public class MovieRepositoryTest {
     public void testAddInvalidYear() {
         movie.setProductionYear(null);
         repository.save(movie);
+        repository.delete(movie);
     }
 
     @Test(expected = ValidationException.class)
     public void testAddNullGenre() {
         movie.setGenres(null);
         repository.save(movie);
+        repository.delete(movie);
     }
 
     @Test(expected = ValidationException.class)
     public void testAddTooManyGenres() {
         movie.setGenres(new HashSet<>(Arrays.asList(Genre.CARTOON, Genre.COMEDY, Genre.CRIME, Genre.ACTION)));
         repository.save(movie);
+        repository.delete(movie);
     }
 }
