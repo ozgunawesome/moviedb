@@ -2,6 +2,9 @@ package cc.ozgun.moviedb.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Genre {
 
     @JsonProperty("Action")
@@ -20,13 +23,19 @@ public enum Genre {
     SCIFI("Sci-fi");
 
     private String displayName;
+    private final Map<String, String> map = new HashMap<>();
 
     Genre(String displayName) {
         this.displayName = displayName;
+        map.put("value", this.name());
+        map.put("label", this.displayName());
     }
 
     public String displayName() {
         return this.displayName;
     }
 
+    public Map<String, String> asTokenfieldDictionary() {
+        return map;
+    }
 }

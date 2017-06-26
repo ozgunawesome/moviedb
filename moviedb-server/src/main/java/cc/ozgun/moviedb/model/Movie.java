@@ -3,6 +3,8 @@ package cc.ozgun.moviedb.model;
 import cc.ozgun.moviedb.model.mapper.DurationDeserializer;
 import cc.ozgun.moviedb.model.mapper.DurationSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.NotBlank;
@@ -13,9 +15,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
@@ -28,11 +32,11 @@ import static java.util.Arrays.asList;
         @NamedNativeQuery(
                 name = "findByRegex",
                 resultClass = Movie.class,
-                query = "select * from Movie m where regexp_like(m.title, ?1) or regexp_like(m.short_title, ?1) or regexp_like(m.director, ?1)"),
+                query = "SELECT * FROM Movie m WHERE regexp_like(m.title, ?1) OR regexp_like(m.short_title, ?1) OR regexp_like(m.director, ?1)"),
         @NamedNativeQuery(
                 name = "findByRegexCount",
                 resultSetMapping = "countMapping",
-                query = "select count(*) as numResults from Movie m where regexp_like(m.title, ?1) or regexp_like(m.short_title, ?1) or regexp_like(m.director, ?1)")
+                query = "SELECT count(*) AS numResults FROM Movie m WHERE regexp_like(m.title, ?1) OR regexp_like(m.short_title, ?1) OR regexp_like(m.director, ?1)")
 })
 public class Movie {
 
@@ -168,10 +172,18 @@ public class Movie {
     }
 
     public Movie() {
+        this.genres = Collections.emptySet();
     }
 
     @JsonIgnore
     public String getDisplayDuration() {
         return String.format("%02d:%02d:%02d", duration / 3600, (duration % 3600) / 60, duration % 60);
+    }
+
+    // Ignore this parameter in API requests but return literal JSON when GUI needs it (?!)
+    @JsonIgnore
+    public String getDisplayGenres() throws JsonProcessingException {
+        return new ObjectMapper()
+                .writeValueAsString(genres.stream().map(Genre::asTokenfieldDictionary).collect(Collectors.toList()));
     }
 }

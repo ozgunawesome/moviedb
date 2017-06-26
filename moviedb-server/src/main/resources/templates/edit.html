@@ -11,6 +11,8 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/css/bootstrap-tokenfield.min.css"
+          rel="stylesheet"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
@@ -19,20 +21,17 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/bootstrap-tokenfield.min.js"></script>
 
 </head>
 <body>
 <th:block th:include="fragments/header :: header('edit')"/>
 <div class="container">
-    <h2>Movie Information</h2>
+    <h3>Movie Information</h3>
     <div>
         <!--/*@thymesVar id="movie" type="cc.ozgun.moviedb.model.Movie"*/-->
         <form class="form-horizontal" th:object="${movie}" th:action="@{/movies}" method="post">
             <input type="hidden" th:field="*{id}"/>
-            <input type="hidden" th:field="*{duration}"/>
-            <input type="hidden" th:field="*{genres}"/>
-            <input type="hidden" th:field="*{ageRating}"/>
-            <input type="hidden" th:field="*{productionYear}"/>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Title</label>
                 <div class="col-sm-10">
@@ -51,6 +50,35 @@
                     <input type="text" required="true" class="form-control autocomplete" th:field="*{director}"/>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Production year</label>
+                <div class="col-sm-10">
+                    <input type="text" required="true" class="form-control" th:field="*{productionYear}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Duration (seconds)</label>
+                <div class="col-sm-10">
+                    <input type="text" required="true" class="form-control" th:field="*{duration}"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Age rating</label>
+                <div class="col-sm-10 selectContainer">
+                    <select class="form-control" name="agerating" required="true" th:field="*{ageRating}">
+                        <option th:each="rating : ${T(cc.ozgun.moviedb.model.AgeRating).values()}" th:value="${rating}"
+                                th:text="${rating.displayName()}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Genres</label>
+                <div class="col-sm-10">
+                    <input type="text" required="true" class="form-control" id="tokenfield" th:field="*{genres}"
+                           th:attr="data-tokens=*{displayGenres}"/>
+                </div>
+            </div>
             <div class="row">
                 <button type="submit" class="btn btn-success">Save</button>
             </div>
@@ -58,9 +86,39 @@
     </div>
 </div>
 <script type="text/javascript">
+    genres = [
+        {value: 'ACTION', label: 'Action'},
+        {value: 'CARTOON', label: 'Cartoon'},
+        {value: 'COMEDY', label: 'Comedy'},
+        {value: 'CRIME', label: 'Crime'},
+        {value: 'DRAMA', label: 'Drama'},
+        {value: 'HORROR', label: 'Horror'},
+        {value: 'SCIFI', label: 'Sci-fi'}
+    ];
     $("#director").autocomplete({
         source: "/api/directors"
     });
+    $('#tokenfield').tokenfield({
+        autocomplete: {
+            source: genres,
+            delay: 100
+        },
+        showAutocompleteOnFocus: true,
+        limit: 3
+    }).tokenfield('setTokens', $('#tokenfield').data('tokens'));
+
+    $('#tokenfield').on('tokenfield:createtoken', function (event) {
+        var idx = -1;
+        $.each(genres, function (index, item) {
+            if (event.attrs.value === item.value) {
+                idx = index;
+            }
+        });
+        if (idx === -1) {
+            event.preventDefault();
+        }
+    });
+
 </script>
 </body>
 </html>

@@ -49,4 +49,9 @@ public class MovieController {
         return "redirect:/";
     }
 
+    @GetMapping(path = "movies/search/{expression}")
+    public ModelAndView search(@PathVariable(value = "expression", required = false) String expression, Pageable page) {
+        return new ModelAndView("movies").addObject("movies", movieRepository.findByRegularExpression(expression, page));
+    }
+
 }

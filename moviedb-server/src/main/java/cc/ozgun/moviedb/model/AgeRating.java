@@ -15,6 +15,8 @@ public enum AgeRating {
 
     private String displayName;
 
+    //public static final AgeRating[] values = {EIGHTEEN, SIXTEEN, TWELVE, SIX};
+
     AgeRating(String displayName) {
         this.displayName = displayName;
     }
