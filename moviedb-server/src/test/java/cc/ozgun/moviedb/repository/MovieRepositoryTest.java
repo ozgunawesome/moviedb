@@ -29,6 +29,7 @@ public class MovieRepositoryTest {
     @BeforeClass
     public static void startApplication() {
         System.setProperty("spring.profiles.active", "test");
+        System.setProperty("server.port", "0");
         context = SpringApplication.run(MoviedbApplication.class);
         repository = context.getBean(MovieRepository.class);
 
