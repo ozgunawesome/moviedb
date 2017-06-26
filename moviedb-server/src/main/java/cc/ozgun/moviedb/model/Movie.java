@@ -2,6 +2,7 @@ package cc.ozgun.moviedb.model;
 
 import cc.ozgun.moviedb.model.mapper.DurationDeserializer;
 import cc.ozgun.moviedb.model.mapper.DurationSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.NotBlank;
@@ -167,5 +168,10 @@ public class Movie {
     }
 
     public Movie() {
+    }
+
+    @JsonIgnore
+    public String getDisplayDuration() {
+        return String.format("%02d:%02d:%02d", duration / 3600, (duration % 3600) / 60, duration % 60);
     }
 }

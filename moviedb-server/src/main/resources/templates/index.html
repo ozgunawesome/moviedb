@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MovieDb</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          type="text/css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">MovieDb</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Movies</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <!--/*@thymesVar id="movies" type="org.springframework.data.domain.Page<cc.ozgun.moviedb.model.Movie>"*/-->
+    <div class="row">
+        <table class="table">
+            <tr>
+                <th>Title</th>
+                <th>Short title</th>
+                <th>Director</th>
+                <th>Year</th>
+                <th>Duration</th>
+                <th>Age rating</th>
+                <th>Genre(s)</th>
+                <th></th>
+            </tr>
+            <tr th:each="movie : ${movies}">
+                <td th:text="${movie.title}"></td>
+                <td th:text="${movie.shortTitle}"></td>
+                <td th:text="${movie.director}"></td>
+                <td th:text="${movie.productionYear}"></td>
+                <td th:text="${movie.displayDuration}"></td>
+                <td th:text="${movie.ageRating.displayName()}"></td>
+                <td><span th:each="genre, stat : ${movie.genres}"
+                          th:text="${genre.displayName()} + (!${stat.last} ? ', ' : '')"></span></td>
+            </tr>
+        </table>
+    </div>
+    <div class="row">
+        <div th:if="${movies.totalPages != 1}" class="form-group col-md-11 pagination-centered">
+            <ul class="pagination">
+                <li th:class="${movies.number == 0} ? disabled">
+                    <a class="pageLink" th:href="@{/(size=${movies.size}, page=0)}">&laquo;</a>
+                </li>
+                <li th:class="${movies.number == 0} ? disabled">
+                    <a class="pageLink" th:href="@{/(size=${movies.size}, page=${movies.number - 1})}">&larr;</a>
+                </li>
+                <li th:class="${movies.number == (page - 1)} ? 'active pointer-disabled'"
+                    th:each="page : ${#numbers.sequence(1, movies.totalPages)}">
+                    <a class="pageLink" th:href="@{/(size=${movies.size}, page=${page - 1})}" th:text="${page}"></a>
+                </li>
+                <li th:class="${movies.number + 1 == movies.totalPages} ? disabled">
+                    <a class="pageLink" th:href="@{/(size=${movies.size}, page=${movies.number + 1})}">&rarr;</a>
+                </li>
+                <li th:class="${movies.number + 1 == movies.totalPages} ? disabled">
+                    <a class="pageLink" th:href="@{/(size=${movies.size}, page=${movies.totalPages - 1})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -5,17 +5,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum Genre {
 
     @JsonProperty("Action")
-    ACTION,
+    ACTION("Action"),
     @JsonProperty("Cartoon")
-    CARTOON,
+    CARTOON("Cartoon"),
     @JsonProperty("Comedy")
-    COMEDY,
+    COMEDY("Comedy"),
     @JsonProperty("Crime")
-    CRIME,
+    CRIME("Crime"),
     @JsonProperty("Drama")
-    DRAMA,
+    DRAMA("Drama"),
     @JsonProperty("Horror")
-    HORROR,
+    HORROR("Horror"),
     @JsonProperty("Sci-fi")
-    SCIFI
+    SCIFI("Sci-fi");
+
+    private String displayName;
+
+    Genre(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String displayName() {
+        return this.displayName;
+    }
+
 }
