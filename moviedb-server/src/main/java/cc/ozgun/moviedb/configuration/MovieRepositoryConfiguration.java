@@ -17,7 +17,8 @@ public class MovieRepositoryConfiguration extends RepositoryRestMvcConfiguration
         return super.config()
                 .exposeIdsFor(Movie.class) //expose the 'id' field
                 .useHalAsDefaultJsonMediaType(false)
-                .setDefaultMediaType(MediaType.APPLICATION_JSON_UTF8);
+                .setDefaultMediaType(MediaType.APPLICATION_JSON_UTF8)
+                .setBasePath("/api"); // for it not to be confused with gui path
     }
 
 }

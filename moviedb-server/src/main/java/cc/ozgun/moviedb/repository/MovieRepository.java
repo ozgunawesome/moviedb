@@ -44,7 +44,7 @@ public interface MovieRepository extends PagingAndSortingRepository<Movie, Long>
     @Query("select m from Movie m where m.productionYear <= ?1")
     Page<Movie> findByProductionYearOnOrBefore(@Param("year") Integer productionYear, Pageable pageable);
 
-    Page<Movie> findByProductionYearBetween(@Param("year1") Integer lowerBound, @Param("year2") Integer upperBound, Pageable pageable);
+    Page<Movie> findByProductionYearBetween(@Param("from") Integer lowerBound, @Param("to") Integer upperBound, Pageable pageable);
 
     Page<Movie> findByAgeRating(@Param("ageRating") AgeRating ageRating, Pageable pageable);
 
